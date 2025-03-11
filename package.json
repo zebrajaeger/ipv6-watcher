@@ -1,0 +1,16 @@
+{
+  "name": "ipv6-watcher",
+  "version": "1.0.0",
+  "description": "A Dockerized IPv6 prefix watcher that monitors IPv6 changes and restarts a target container.",
+  "main": "watch-ipv6.js",
+  "scripts": {
+    "start": "node watch-ipv6.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zebrajaeger/ipv6-watcher.git"
+  },
+  "dependencies": {},
+  "author": "",
+  "license": "MIT" 
+}

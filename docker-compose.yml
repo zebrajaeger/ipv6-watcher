@@ -1,0 +1,12 @@
+services:
+  ipv6-watcher:
+    image: ipv6-watcher
+    build: .
+    container_name: ipv6-watcher
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    environment:
+      - TARGET_CONTAINER=cloudflare-ddns
+
