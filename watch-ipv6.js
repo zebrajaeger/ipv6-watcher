@@ -1,6 +1,8 @@
 const fs = require("fs");
-const https = require("https");
+const http = require("http");
 const { spawn, execSync } = require("child_process");
+
+console.log("IPv6 Prefix Watcher is starting...");
 
 const containerToRestart = process.env.TARGET_CONTAINER;
 
@@ -16,7 +18,7 @@ function getIPv6Prefix() {
     try {
         const output = execSync("ip -6 addr show scope global | grep inet6 | awk '{print $2}'");
         const lines = output.toString().split("\n").filter(line => line.trim() !== "");
-
+        
         for (const line of lines) {
             const address = line.split("/")[0];
             // Ignore ULA (fd00::/8) addresses
@@ -32,7 +34,7 @@ function getIPv6Prefix() {
 
 function restartDockerContainer() {
     console.log(`IPv6 prefix has changed. Restarting container ${containerToRestart}...`);
-
+    
     if (!fs.existsSync(DOCKER_SOCK_PATH)) {
         console.error("Error: Docker socket not found. Is /var/run/docker.sock mounted?");
         return;
@@ -44,7 +46,7 @@ function restartDockerContainer() {
         method: "POST"
     };
 
-    const req = https.request(options, (res) => {
+    const req = http.request(options, (res) => {
         if (res.statusCode === 204) {
             console.log(`Container ${containerToRestart} successfully restarted.`);
         } else {
@@ -59,7 +61,7 @@ function restartDockerContainer() {
     req.end();
 }
 
-// Start monitoring IPv6 address changes
+console.log('Start monitoring IPv6 address changes')
 const monitor = spawn("ip", ["monitor", "address"]);
 
 monitor.stdout.on("data", (data) => {
