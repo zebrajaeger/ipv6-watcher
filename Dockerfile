@@ -1,11 +1,10 @@
-FROM node:20-alpine
+FROM node:lts-slim
 
 WORKDIR /app
 
-COPY package.json package-lock.json ./
-RUN npm install
+# Install iproute2 for 'ip monitor' command
+RUN apt-get update && apt-get install -y iproute2 && rm -rf /var/lib/apt/lists/*
 
-COPY watch-ipv6.js ./
+COPY package.json watch-ipv6.js ./
 
 CMD ["node", "watch-ipv6.js"]
-
